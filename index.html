@@ -73,11 +73,9 @@
       return amount / 10 ** 18;
     }
 
-    web3.eth.personal.getAccounts().then(console.log);
+    ethereum.request({ method: 'eth_requestAccounts' });
 
-    ethereum.on('accountsChanged', function (accounts) {
-        console.log(accounts[0]);
-    });
+    // web3.eth.personal.getAccounts().then(console.log);
   }
   </script>
   </body>
