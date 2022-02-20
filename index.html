@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Stenach</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    <link href="cover.css" rel="stylesheet">
+  </head>
+  <body class="d-flex h-100 text-center text-white bg-dark">
+    
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <header class="mb-auto">
+    <div>
+      <h3 class="float-md-start mb-0">Stenach</h3>
+    </div>
+  </header>
+
+  <main class="px-3">
+    <p>Купить Стенач: <a href="https://quickswap.exchange/#/swap?inputCurrency=0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270&outputCurrency=0x128407381b048000dc52a89c3e2ed466bbd0d5b5">QuickSwap</a></p>
+  </main>
+  
+  <footer class="mt-auto text-white-50">
+  </footer>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+<script src="/dist/stenach-abi.js"></script>
+<script>
+  if (typeof window.ethereum !== 'undefined') {
+    const NODE_URL = 'https://polygon-rpc.com/';
+    const provider = new Web3.providers.HttpProvider(NODE_URL);
+    const web3 = new Web3(provider); // 0xfaBFf3e80697F1b157ccBc04EF2583f7F8b93D13
+    const account = '0xfaBFf3e80697F1b157ccBc04EF2583f7F8b93D13';
+    const stenachContractAddress = '0x128407381B048000dC52A89C3E2eD466Bbd0D5B5';
+    const stenachLabelAddress = '0x4C0eD3f8C5E08f9Cc93D45169592829C905A384d';
+    const stenachContract = new web3.eth.Contract(stenachABI, stenachContractAddress, {from: account});
+    const labelContract = new web3.eth.Contract(labelABI, stenachLabelAddress, {from: account});
+
+    let totalSupply = 0;
+
+    stenachContract.methods.totalSupply().call().then(function (res) {
+      totalSupply = res;
+      $('<p>Всего монет: ' + degree(totalSupply) + '</p>').appendTo('main');
+    }).then(function () {
+      stenachContract.methods.balanceOf(account).call().then(function (res) {
+        $('<p>У вас есть: ' + degree(res) + ' STENACH</p>').appendTo('main');
+      });
+    });
+
+    function degree(amount) {
+      return amount / 10 ** 18;
+    }
+  }
+  </script>
+  </body>
+</html>
