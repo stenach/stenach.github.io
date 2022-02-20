@@ -49,33 +49,31 @@
 <script src="/dist/stenach-abi.js"></script>
 <script>
   if (typeof window.ethereum !== 'undefined') {
-    const NODE_URL = 'https://polygon-rpc.com/';
-    const provider = new Web3.providers.HttpProvider(NODE_URL);
-    window.web3 = new Web3(provider); // 0xfaBFf3e80697F1b157ccBc04EF2583f7F8b93D13
-    const account = '0xfaBFf3e80697F1b157ccBc04EF2583f7F8b93D13';
-    const stenachContractAddress = '0x128407381B048000dC52A89C3E2eD466Bbd0D5B5';
-    const stenachLabelAddress = '0x4C0eD3f8C5E08f9Cc93D45169592829C905A384d';
-    const stenachContract = new web3.eth.Contract(stenachABI, stenachContractAddress, {from: account});
-    const labelContract = new web3.eth.Contract(labelABI, stenachLabelAddress, {from: account});
+    ethereum.request({ method: 'eth_requestAccounts' }).then(function (accounts) {
+      const NODE_URL = 'https://polygon-rpc.com/';
+      const provider = new Web3.providers.HttpProvider(NODE_URL);
+      window.web3 = new Web3(provider); // 0xfaBFf3e80697F1b157ccBc04EF2583f7F8b93D13
+      const account = accounts[0];
+      const stenachContractAddress = '0x128407381B048000dC52A89C3E2eD466Bbd0D5B5';
+      const stenachLabelAddress = '0x4C0eD3f8C5E08f9Cc93D45169592829C905A384d';
+      const stenachContract = new web3.eth.Contract(stenachABI, stenachContractAddress, {from: account});
+      const labelContract = new web3.eth.Contract(labelABI, stenachLabelAddress, {from: account});
 
-    let totalSupply = 0;
+      let totalSupply = 0;
 
-    stenachContract.methods.totalSupply().call().then(function (res) {
-      totalSupply = res;
-      $('<p>Всего монет: ' + degree(totalSupply) + '</p>').appendTo('main');
-    }).then(function () {
-      stenachContract.methods.balanceOf(account).call().then(function (res) {
-        $('<p>У вас есть: ' + degree(res) + ' STENACH</p>').appendTo('main');
+      stenachContract.methods.totalSupply().call().then(function (res) {
+        totalSupply = res;
+        $('<p>Всего монет: ' + degree(totalSupply) + '</p>').appendTo('main');
+      }).then(function () {
+        stenachContract.methods.balanceOf(account).call().then(function (res) {
+          $('<p>У вас есть: ' + degree(res) + ' STENACH</p>').appendTo('main');
+        });
       });
+
+      function degree(amount) {
+        return amount / 10 ** 18;
+      }
     });
-
-    function degree(amount) {
-      return amount / 10 ** 18;
-    }
-
-    console.log(ethereum.request({ method: 'eth_requestAccounts' }));
-
-    // web3.eth.personal.getAccounts().then(console.log);
   }
   </script>
   </body>
