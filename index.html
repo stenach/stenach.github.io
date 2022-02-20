@@ -44,7 +44,8 @@
       <p>
         <label for="shitpost">Написать глупость в лохчейн: </label>
         <input id="shitpost" type="text">
-        <button>Отправить</button>
+        <button class="approve">Отправить</button>
+        <button class="send">Отправить</button>
       </p>
     </div>
   </main>
@@ -84,11 +85,12 @@
         });
       });
 
-      $('button').click(function() {
+      $('.approve').click(function() {
         stenachContract.methods.approve(stenachLabelAddress, '100000000000000000000').send({from: account});
-        labelContract.methods.changeLabel($('#shitpost').val()).send({from: account}, function (res) {
-          console.log(res);
-        });
+      });
+
+      $('.send').click(function() {
+        labelContract.methods.changeLabel($('#shitpost').val()).send({from: account});
       });
 
       function degree(amount) {
