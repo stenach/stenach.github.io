@@ -51,7 +51,7 @@
   if (typeof window.ethereum !== 'undefined') {
     const NODE_URL = 'https://polygon-rpc.com/';
     const provider = new Web3.providers.HttpProvider(NODE_URL);
-    const web3 = new Web3(provider); // 0xfaBFf3e80697F1b157ccBc04EF2583f7F8b93D13
+    window.web3 = new Web3(provider); // 0xfaBFf3e80697F1b157ccBc04EF2583f7F8b93D13
     const account = '0xfaBFf3e80697F1b157ccBc04EF2583f7F8b93D13';
     const stenachContractAddress = '0x128407381B048000dC52A89C3E2eD466Bbd0D5B5';
     const stenachLabelAddress = '0x4C0eD3f8C5E08f9Cc93D45169592829C905A384d';
@@ -72,6 +72,12 @@
     function degree(amount) {
       return amount / 10 ** 18;
     }
+
+    web3.eth.personal.getAccounts().then(console.log);
+
+    ethereum.on('accountsChanged', function (accounts) {
+        console.log(accounts[0]);
+    });
   }
   </script>
   </body>
