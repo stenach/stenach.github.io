@@ -38,6 +38,11 @@
 
   <main class="px-3">
     <p>Купить Стенач: <a href="https://quickswap.exchange/#/swap?inputCurrency=0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270&outputCurrency=0x128407381b048000dc52a89c3e2ed466bbd0d5b5">QuickSwap</a></p>
+    <p>
+      <label for="shitpost">Написать глупость в лохчейн: </label>
+      <input id="shitpost" type="text">
+      <button>Отправить</button>
+    </p>
   </main>
   
   <footer class="mt-auto text-white-50">
@@ -52,7 +57,8 @@
     ethereum.request({ method: 'eth_requestAccounts' }).then(function (accounts) {
       const NODE_URL = 'https://polygon-rpc.com/';
       const provider = new Web3.providers.HttpProvider(NODE_URL);
-      window.web3 = new Web3(provider); // 0xfaBFf3e80697F1b157ccBc04EF2583f7F8b93D13
+      web3 = new Web3(provider); // 0xfaBFf3e80697F1b157ccBc04EF2583f7F8b93D13
+      web3.eth.setProvider(Web3.givenProvider);
       const account = accounts[0];
       const stenachContractAddress = '0x128407381B048000dC52A89C3E2eD466Bbd0D5B5';
       const stenachLabelAddress = '0x4C0eD3f8C5E08f9Cc93D45169592829C905A384d';
@@ -67,6 +73,17 @@
       }).then(function () {
         stenachContract.methods.balanceOf(account).call().then(function (res) {
           $('<p>У вас есть: ' + degree(res) + ' STENACH</p>').appendTo('main');
+        });
+      }).then(function () {
+        labelContract.methods.getLabel().call().then(function (res) {
+          $('<p>Какому-то дурачку это показалось смешным: ' + res + '</p>').appendTo('main');
+        });
+      });
+
+      $('button').click(function() {
+        stenachContract.methods.approve(stenachLabelAddress, '100000000000000000000').send({from: account});
+        labelContract.methods.changeLabel($('#shitpost').val()).send({from: account}, function (res) {
+          console.log(res);
         });
       });
 
